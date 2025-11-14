@@ -1,0 +1,17 @@
+{% extends 'template.html' %}
+
+{% block content %}
+<h1>Tableau de Bord Responsable de Filière</h1>
+<p>Filière: {{ filiere.nom }}</p>
+<p>Description: {{ filiere.description }}</p>
+<h2>Étudiants dans la filière</h2>
+<ul>
+{% for etudiant in etudiants %}
+    <li>{{ etudiant.prenom }} {{ etudiant.nom }}</li>
+{% endfor %}
+</ul>
+<div class="d-flex flex-wrap gap-2">
+    <a href="{% url 'etudiants_par_filiere' filiere.id %}" class="btn btn-primary">Étudiants de ma Filière</a>
+    <a href="{% url 'etudiants_par_filiere' filiere.id %}" class="btn btn-secondary">Gérer Bulletins</a>
+</div>
+{% endblock %}

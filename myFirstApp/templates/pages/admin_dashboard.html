@@ -1,0 +1,13 @@
+{% extends 'template.html' %}
+
+{% block content %}
+<h1>Tableau de Bord Administrateur</h1>
+<p>Nombre d'étudiants: {{ etudiants_count }}</p>
+<p>Nombre de filières: {{ filieres_count }}</p>
+<div class="d-flex flex-wrap gap-2">
+    <a href="{% url 'gerer_filieres' %}" class="btn btn-primary">Gérer Filières</a>
+    <a href="{% url 'admin_etudiants' %}" class="btn btn-secondary">Étudiants</a>
+    <a href="{% url 'gerer_filieres' %}" class="btn btn-success">Créer Filière</a>
+    <a href="{% url 'etudiants_sans_filiere' %}" class="btn btn-warning">Assigner Étudiant</a>
+</div>
+{% endblock %}

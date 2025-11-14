@@ -1,0 +1,385 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assigner une filière - {{ etudiant.prenom }} {{ etudiant.nom }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .content {
+            padding: 2rem;
+        }
+
+        .student-info {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            border-left: 5px solid #667eea;
+        }
+
+        .student-info h3 {
+            color: #333;
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        .student-info p {
+            color: #666;
+            margin-bottom: 0.3rem;
+        }
+
+        .current-filiere {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .current-filiere strong {
+            color: #533f00;
+        }
+
+        .actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .assign-section {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 15px;
+            border: 2px dashed #667eea;
+        }
+
+        .assign-section h3 {
+            color: #333;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 1.4rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .filiere-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .filiere-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .filiere-card.selected {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .filiere-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .filiere-icon {
+            font-size: 2rem;
+            color: #667eea;
+            margin-right: 1rem;
+        }
+
+        .filiere-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .filiere-description {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .filiere-stats {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        .messages {
+            margin-bottom: 1rem;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .no-filieres {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+
+        .no-filieres i {
+            font-size: 3rem;
+            color: #ddd;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .actions {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-graduation-cap"></i> Assigner une filière</h1>
+            <p>{{ etudiant.prenom }} {{ etudiant.nom }}</p>
+        </div>
+
+        <div class="content">
+            <div class="student-info">
+                <h3><i class="fas fa-user"></i> Informations de l'étudiant</h3>
+                <p><strong>Nom complet:</strong> {{ etudiant.prenom }} {{ etudiant.nom }}</p>
+                <p><strong>Email:</strong> {{ etudiant.utilisateur.email }}</p>
+                <p><strong>Date d'inscription:</strong> {{ etudiant.utilisateur.date_joined|date:"d/m/Y" }}</p>
+            </div>
+
+            {% if etudiant.filiere %}
+            <div class="current-filiere">
+                <strong><i class="fas fa-info-circle"></i> Filière actuelle:</strong> {{ etudiant.filiere.nom }}
+                <br>
+                <small>Cette action remplacera la filière actuelle de l'étudiant.</small>
+            </div>
+            {% endif %}
+
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="actions">
+                <a href="{% url 'admin_etudiants' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Retour à la liste
+                </a>
+                <a href="{% url 'home' %}" class="btn btn-secondary">
+                    <i class="fas fa-home"></i> Accueil
+                </a>
+            </div>
+
+            {% if filieres %}
+            <div class="assign-section">
+                <h3><i class="fas fa-plus"></i> Choisir une filière</h3>
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label for="{{ form.filiere.id_for_label }}">Sélectionner une filière</label>
+                        {{ form.filiere }}
+                        {% if form.filiere.errors %}
+                        <div class="alert alert-error">
+                            {% for error in form.filiere.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-save"></i> Assigner la filière
+                    </button>
+                </form>
+
+                <h3 style="text-align: center; margin: 2rem 0 1rem 0; color: #333;">
+                    <i class="fas fa-list"></i> Toutes les filières disponibles
+                </h3>
+
+                {% for filiere in filieres %}
+                <div class="filiere-card" onclick="selectFiliere({{ filiere.id }})">
+                    <div class="filiere-header">
+                        <div class="filiere-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <div>
+                            <div class="filiere-title">{{ filiere.nom }}</div>
+                            <div class="filiere-description">
+                                {{ filiere.description|default:"Aucune description"|truncatechars:100 }}
+                            </div>
+                            <div class="filiere-stats">
+                                {{ filiere.etudiant_set.count }} étudiant{{ filiere.etudiant_set.count|pluralize:"s" }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="no-filieres">
+                <i class="fas fa-graduation-cap"></i>
+                <h3>Aucune filière disponible</h3>
+                <p>Vous devez d'abord créer des filières avant de pouvoir les assigner aux étudiants.</p>
+                <a href="{% url 'gerer_filieres' %}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Créer des filières
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        function selectFiliere(filiereId) {
+            // Sélectionner la filière dans le select
+            const select = document.getElementById('{{ form.filiere.id_for_label }}');
+            select.value = filiereId;
+
+            // Mettre à jour l'apparence des cartes
+            document.querySelectorAll('.filiere-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+        }
+    </script>
+</body>
+</html>

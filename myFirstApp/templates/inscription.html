@@ -1,0 +1,307 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription - ISEP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .register-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            max-width: 450px;
+            width: 100%;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .register-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem;
+            text-align: center;
+            color: white;
+        }
+
+        .register-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .register-header p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        .register-form {
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #667eea;
+            font-size: 1.1rem;
+            z-index: 1;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 3rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-control::placeholder {
+            color: #adb5bd;
+        }
+
+        .btn-register {
+            width: 100%;
+            padding: 0.75rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-register:active {
+            transform: translateY(0);
+        }
+
+        .alert {
+            padding: 0.75rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .alert-danger {
+            background: #fee;
+            color: #c33;
+            border: 1px solid #fcc;
+        }
+
+        .alert-success {
+            background: #efe;
+            color: #363;
+            border: 1px solid #cfc;
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e1e5e9;
+        }
+
+        .links a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .links a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        .back-link {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s ease;
+        }
+
+        .back-link:hover {
+            opacity: 0.8;
+        }
+
+        .password-strength {
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+            color: #6c757d;
+        }
+
+        @media (max-width: 480px) {
+            .register-container {
+                margin: 1rem;
+                max-width: none;
+            }
+
+            .register-header {
+                padding: 1.5rem;
+            }
+
+            .register-form {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="{% url 'home' %}" class="back-link">
+        <i class="fas fa-arrow-left"></i> Retour à l'accueil
+    </a>
+
+    <div class="register-container">
+        <div class="register-header">
+            <h2>Inscription</h2>
+            <p>Créez votre compte ISEP</p>
+        </div>
+
+        <div class="register-form">
+            <form method="POST" action="">
+                {% csrf_token %}
+
+                {% for message in messages %}
+                <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+
+                {{ formulaire.non_field_errors }}
+
+                <div class="form-group">
+                    <i class="fas fa-user"></i>
+                    {{ formulaire.username }}
+                    {{ formulaire.username.errors }}
+                </div>
+
+                <div class="form-group">
+                    <i class="fas fa-envelope"></i>
+                    {{ formulaire.email }}
+                    {{ formulaire.email.errors }}
+                </div>
+
+                <div class="form-group" style="position: relative;">
+                    {{ formulaire.password1 }}
+                    <i class="fas fa-eye password-toggle" style="position: absolute; right: 10px; top: 35%; transform: translateY(-50%); color: #667eea; cursor: pointer; font-size: 0.9rem; z-index: 2;" data-target="id_password1"></i>
+                    <div class="password-strength">
+                        <small>Le mot de passe doit contenir au moins 8 caractères</small>
+                    </div>
+                    {{ formulaire.password1.errors }}
+                </div>
+
+                <div class="form-group" style="position: relative;">
+                    {{ formulaire.password2 }}
+                    <i class="fas fa-eye password-toggle" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #667eea; cursor: pointer; font-size: 0.9rem; z-index: 2;" data-target="id_password2"></i>
+                    {{ formulaire.password2.errors }}
+                </div>
+
+                <button type="submit" class="btn-register">
+                    <i class="fas fa-user-plus"></i> S'inscrire
+                </button>
+            </form>
+
+            <div class="links">
+                <p>Déjà un compte ? <a href="{% url 'login' %}">Se connecter</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Améliorer les placeholders et styles des champs de formulaire
+        document.addEventListener('DOMContentLoaded', function() {
+            const formFields = document.querySelectorAll('input[type="text"], input[type="email"], input[type="password"]');
+
+            formFields.forEach(function(field) {
+                field.classList.add('form-control');
+
+                // Définir les placeholders
+                if (field.name === 'username') {
+                    field.placeholder = 'Nom d\'utilisateur';
+                } else if (field.name === 'email') {
+                    field.placeholder = 'Adresse email';
+                } else if (field.name === 'password1') {
+                    field.placeholder = 'Mot de passe';
+                } else if (field.name === 'password2') {
+                    field.placeholder = 'Confirmer le mot de passe';
+                }
+            });
+
+            // Fonction pour basculer la visibilité du mot de passe
+            const passwordToggles = document.querySelectorAll('.password-toggle');
+
+            passwordToggles.forEach(toggle => {
+                toggle.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-target');
+                    const passwordInput = document.getElementById(targetId);
+
+                    if (passwordInput.type === 'password') {
+                        passwordInput.type = 'text';
+                        this.classList.remove('fa-eye');
+                        this.classList.add('fa-eye-slash');
+                    } else {
+                        passwordInput.type = 'password';
+                        this.classList.remove('fa-eye-slash');
+                        this.classList.add('fa-eye');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

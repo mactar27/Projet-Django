@@ -1,0 +1,471 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISEP - Accueil</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+
+        .navbar .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .logo img {
+            height: 50px;
+            margin-right: 1rem;
+        }
+
+        .logo h2 {
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: #667eea;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-greeting {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .btn {
+            padding: 0.5rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .hero {
+            margin-top: 80px;
+            padding: 4rem 2rem;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .features {
+            padding: 4rem 2rem;
+            background: white;
+        }
+
+        .features h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 3rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .stats {
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .stat-item h3 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-item p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .footer {
+            background: #333;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="#" class="logo">
+                <img src="{% static 'images/logo.png' %}" alt="DEV Logo">
+            </a>
+
+            {% if user.is_authenticated %}
+            <ul class="nav-links">
+                <li><a href="{% url 'home' %}">Accueil</a></li>
+                {% if user|has_group:'etudiant' %}
+                <li><a href="{% url 'etudiant_profil' %}">Mon Profil</a></li>
+                <li><a href="{% url 'profil_utilisateur' %}">Modifier Profil</a></li>
+                <li><a href="{% url 'etudiants' %}">Liste Étudiants</a></li>
+                {% endif %}
+                {% if user|has_group:'admin' %}
+                <li><a href="{% url 'admin_etudiants' %}">Administration</a></li>
+                {% endif %}
+                <li><a href="{% url 'cours' %}">Cours</a></li>
+            </ul>
+
+            <div class="user-info">
+                <span class="user-greeting">Bonjour {{ user.get_full_name|default:user.username }}</span>
+                <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline">Déconnexion</button>
+                </form>
+            </div>
+            {% else %}
+            <ul class="nav-links">
+                <li><a href="#features">Fonctionnalités</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+
+            <a href="{% url 'login' %}" class="btn btn-primary">Connexion</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Bienvenue à DEV</h1>
+            <p>Découvrez notre plateforme moderne de gestion étudiante</p>
+            {% if not user.is_authenticated %}
+            <div class="hero-buttons">
+                <a href="{% url 'inscription' %}" class="btn btn-primary">S'inscrire</a>
+                <a href="{% url 'login' %}" class="btn btn-outline">Se connecter</a>
+            </div>
+            {% else %}
+            <div class="hero-buttons">
+                {% if user|has_group:'etudiant' %}
+                <a href="{% url 'etudiant_profil' %}" class="btn btn-primary">Mon Profil</a>
+                <a href="{% url 'profil_utilisateur' %}" class="btn btn-outline">Modifier Profil</a>
+                <a href="{% url 'etudiants' %}" class="btn btn-outline">Voir Étudiants</a>
+                {% endif %}
+                {% if user|has_group:'admin' %}
+                <a href="{% url 'admin_etudiants' %}" class="btn btn-primary">Administration</a>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="container">
+            <h2>Fonctionnalités</h2>
+            <div class="features-grid">
+                {% if user.is_authenticated %}
+                {% if user|has_group:'etudiant' %}
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-edit"></i>
+                    </div>
+                    <h3>Mon Profil</h3>
+                    <p>Gérez vos informations personnelles et votre photo de profil.</p>
+                    <a href="{% url 'etudiant_profil' %}" class="btn btn-primary" style="margin-top: 1rem;">Voir mon profil</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-edit"></i>
+                    </div>
+                    <h3>Modifier Profil</h3>
+                    <p>Mettez à jour vos informations et changez votre photo.</p>
+                    <a href="{% url 'profil_utilisateur' %}" class="btn btn-primary" style="margin-top: 1rem;">Modifier</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Liste Étudiants</h3>
+                    <p>Consultez la liste complète des étudiants inscrits.</p>
+                    <a href="{% url 'etudiants' %}" class="btn btn-primary" style="margin-top: 1rem;">Voir la liste</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <h3>Cours</h3>
+                    <p>Accédez aux ressources pédagogiques et cours.</p>
+                    <a href="{% url 'cours' %}" class="btn btn-primary" style="margin-top: 1rem;">Explorer</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-upload"></i>
+                    </div>
+                    <h3>Documents</h3>
+                    <p>Téléchargez et partagez vos documents (PDF, images, etc.).</p>
+                    <div style="display: flex; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap;">
+                        <a href="{% url 'upload_document' %}" class="btn btn-primary">Télécharger</a>
+                        <a href="{% url 'liste_documents' %}" class="btn btn-outline" style="background: transparent; color: #667eea; border: 2px solid #667eea;">Voir mes documents</a>
+                    </div>
+                </div>
+                {% endif %}
+                {% if user|has_group:'admin' %}
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3>Administration</h3>
+                    <p>Gérez tous les étudiants et les données du système.</p>
+                    <a href="{% url 'admin_etudiants' %}" class="btn btn-primary" style="margin-top: 1rem;">Administrer</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h3>Statistiques</h3>
+                    <p>Consultez les statistiques et rapports détaillés.</p>
+                    <a href="#" class="btn btn-primary" style="margin-top: 1rem;">Voir stats</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users-cog"></i>
+                    </div>
+                    <h3>Gestion Utilisateurs</h3>
+                    <p>Administrez les comptes utilisateurs et permissions.</p>
+                    <a href="#" class="btn btn-primary" style="margin-top: 1rem;">Gérer</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Sécurité</h3>
+                    <p>Contrôle d'accès et protection des données.</p>
+                    <a href="#" class="btn btn-primary" style="margin-top: 1rem;">Sécuriser</a>
+                </div>
+                {% endif %}
+                {% else %}
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <h3>Gestion des Étudiants</h3>
+                    <p>Suivez facilement les informations et les progrès de chaque étudiant.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Tableaux de Bord</h3>
+                    <p>Accédez à des statistiques détaillées et des rapports complets.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Sécurité Avancée</h3>
+                    <p>Protection des données et contrôle d'accès basé sur les rôles.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Interface Moderne</h3>
+                    <p>Design responsive et intuitif pour une expérience optimale.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h3>{{ etudiants_count|default:"500+" }}</h3>
+                    <p>Étudiants inscrits</p>
+                </div>
+                <div class="stat-item">
+                    <h3>{{ cours_count|default:"50+" }}</h3>
+                    <p>Cours disponibles</p>
+                </div>
+                <div class="stat-item">
+                    <h3>{{ satisfaction|default:"98%" }}</h3>
+                    <p>Satisfaction</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer" id="contact">
+        <div class="container">
+            <p>&copy; 2025 ISEP - Institut Supérieur d'Enseignement Professionnel</p>
+            <p>Contact: contact@isep.edu | Tél: +221 XX XXX XX XX</p>
+        </div>
+    </footer>
+</body>
+</html>

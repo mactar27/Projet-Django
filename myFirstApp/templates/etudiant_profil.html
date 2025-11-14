@@ -1,0 +1,347 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Profil Étudiant - ISEP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .logo img {
+            height: 40px;
+            margin-right: 0.5rem;
+        }
+
+        .logo h2 {
+            font-weight: 700;
+            color: #667eea;
+            font-size: 1.2rem;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .main-content {
+            margin-top: 100px;
+            padding: 2rem;
+        }
+
+        .profile-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .profile-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem;
+            text-align: center;
+            color: white;
+        }
+
+        .profile-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .profile-content {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        .profile-sidebar {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-picture {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            border: 5px solid #667eea;
+            object-fit: cover;
+        }
+
+        .profile-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-role {
+            color: #667eea;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .profile-info {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-section {
+            margin-bottom: 2rem;
+        }
+
+        .info-section h3 {
+            color: #333;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .info-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .info-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.25rem;
+            font-weight: 500;
+        }
+
+        .info-value {
+            font-size: 1rem;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .profile-content {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .profile-header {
+                padding: 1.5rem;
+            }
+
+            .profile-content {
+                padding: 1.5rem;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="{% url 'home' %}" class="logo">
+                <img src="{% static 'images/logo.png' %}" alt="ISEP Logo">
+                <h2>ISEP</h2>
+            </a>
+            <a href="{% url 'home' %}" class="btn-outline">
+                <i class="fas fa-arrow-left"></i> Retour à l'accueil
+            </a>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div class="profile-card">
+            <div class="profile-header">
+                <h1><i class="fas fa-user"></i> Mon Profil Étudiant</h1>
+                <p>Gérez vos informations personnelles</p>
+            </div>
+
+            <div class="profile-content">
+                <div class="profile-sidebar">
+                    {% if etudiant.imageProfil %}
+                    <img src="{{ etudiant.imageProfil.url }}" alt="Photo de profil" class="profile-picture">
+                    {% else %}
+                    <img src="{% static 'images/profile1.png' %}" alt="Photo de profil par défaut" class="profile-picture">
+                    {% endif %}
+
+                    <div class="profile-name">{{ etudiant.prenom|default:"Prénom" }} {{ etudiant.nom|default:"Nom" }}</div>
+                    <div class="profile-role">
+                        <i class="fas fa-graduation-cap"></i> Étudiant ISEP
+                    </div>
+
+                    <a href="{% url 'profil_utilisateur' %}" class="btn btn-primary">
+                        <i class="fas fa-edit"></i> Modifier le profil
+                    </a>
+                </div>
+
+                <div class="profile-info">
+                    <div class="info-section">
+                        <h3><i class="fas fa-user-circle"></i> Informations du compte</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">Nom d'utilisateur</div>
+                                <div class="info-value">{{ etudiant.utilisateur.username }}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Adresse email</div>
+                                <div class="info-value">{{ etudiant.utilisateur.email }}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Date d'inscription</div>
+                                <div class="info-value">{{ etudiant.utilisateur.date_joined|date:"d/m/Y" }}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Statut du compte</div>
+                                <div class="info-value">
+                                    {% if etudiant.utilisateur.is_active %}
+                                        <span style="color: #28a745;"><i class="fas fa-check-circle"></i> Actif</span>
+                                    {% else %}
+                                        <span style="color: #dc3545;"><i class="fas fa-times-circle"></i> Inactif</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <h3><i class="fas fa-address-card"></i> Informations personnelles</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">Prénom</div>
+                                <div class="info-value">{{ etudiant.prenom|default:"<em>Non défini</em>"|safe }}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Nom</div>
+                                <div class="info-value">{{ etudiant.nom|default:"<em>Non défini</em>"|safe }}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Téléphone</div>
+                                <div class="info-value">{{ etudiant.telephone|default:"<em>Non défini</em>"|safe }}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Adresse</div>
+                                <div class="info-value">{{ etudiant.adresse|default:"<em>Non défini</em>"|safe }}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Date de naissance</div>
+                                <div class="info-value">{{ etudiant.date|default:"<em>Non défini</em>"|safe }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,441 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if filiere_courante %}{{ filiere_courante.nom }}{% else %}Étudiants sans filière{% endif %} - ISEP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .content {
+            padding: 2rem;
+        }
+
+        .filiere-info {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            border-left: 5px solid #667eea;
+        }
+
+        .filiere-info h3 {
+            color: #333;
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        .filiere-info p {
+            color: #666;
+            margin-bottom: 0.3rem;
+        }
+
+        .actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .filiere-navigation {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .filiere-link {
+            padding: 0.5rem 1rem;
+            background: #f8f9fa;
+            color: #333;
+            text-decoration: none;
+            border-radius: 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .filiere-link:hover,
+        .filiere-link.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .students-table {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-header {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .table-header h3 {
+            color: #333;
+            font-size: 1.2rem;
+            margin: 0;
+        }
+
+        .student-row {
+            display: grid;
+            grid-template-columns: 2fr 2fr 1fr 1fr 2fr;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            align-items: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .student-row:hover {
+            background: #f8f9fa;
+        }
+
+        .student-row:last-child {
+            border-bottom: none;
+        }
+
+        .student-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .student-email {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .student-filiere {
+            background: #667eea;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+
+        .student-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-small {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+            border-radius: 15px;
+        }
+
+        .btn-view {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-edit {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn-assign {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .btn-delete {
+            background: #dc3545;
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: #ddd;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .empty-state p {
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .student-row {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+
+            .student-row > div {
+                text-align: center;
+            }
+
+            .filiere-navigation {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .actions {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>
+                {% if filiere_courante %}
+                    <i class="fas fa-graduation-cap"></i> {{ filiere_courante.nom }}
+                {% else %}
+                    <i class="fas fa-users"></i> Étudiants sans filière
+                {% endif %}
+            </h1>
+            <p>{{ titre }}</p>
+        </div>
+
+        <div class="content">
+            {% if filiere_courante %}
+            <div class="filiere-info">
+                <h3><i class="fas fa-info-circle"></i> Informations de la filière</h3>
+                <p><strong>Nom:</strong> {{ filiere_courante.nom }}</p>
+                <p><strong>Description:</strong> {{ filiere_courante.description|default:"Aucune description" }}</p>
+                <p><strong>Créée le:</strong> {{ filiere_courante.date_creation|date:"d/m/Y" }}</p>
+            </div>
+            {% endif %}
+
+            <div class="actions">
+                <a href="{% url 'admin_etudiants' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Retour à la liste
+                </a>
+                <a href="{% url 'gerer_filieres' %}" class="btn btn-secondary">
+                    <i class="fas fa-cogs"></i> Gérer filières
+                </a>
+                <a href="{% url 'home' %}" class="btn btn-secondary">
+                    <i class="fas fa-home"></i> Accueil
+                </a>
+            </div>
+
+            <div class="filiere-navigation">
+                <a href="{% url 'etudiants_sans_filiere' %}" class="filiere-link {% if not filiere_courante %}active{% endif %}">
+                    <i class="fas fa-users"></i> Sans filière
+                </a>
+                {% for filiere in filieres %}
+                <a href="{% url 'etudiants_par_filiere' filiere.id %}" class="filiere-link {% if filiere_courante and filiere_courante.id == filiere.id %}active{% endif %}">
+                    <i class="fas fa-graduation-cap"></i> {{ filiere.nom }}
+                </a>
+                {% endfor %}
+            </div>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number">{{ etudiants|length }}</div>
+                    <div class="stat-label">
+                        {% if filiere_courante %}
+                            Étudiants dans {{ filiere_courante.nom }}
+                        {% else %}
+                            Étudiants sans filière
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ filieres|length }}</div>
+                    <div class="stat-label">Filières créées</div>
+                </div>
+            </div>
+
+            {% if etudiants %}
+            <div class="students-table">
+                <div class="table-header">
+                    <h3><i class="fas fa-list"></i> Liste des étudiants</h3>
+                </div>
+
+                <div class="student-row" style="background: #f8f9fa; font-weight: 600; border-bottom: 2px solid #667eea;">
+                    <div>Nom complet</div>
+                    <div>Email</div>
+                    <div>Filière</div>
+                    <div>Date d'inscription</div>
+                    <div>Actions</div>
+                </div>
+
+                {% for etudiant in etudiants %}
+                <div class="student-row">
+                    <div>
+                        <div class="student-name">{{ etudiant.prenom }} {{ etudiant.nom }}</div>
+                    </div>
+                    <div>
+                        <div class="student-email">{{ etudiant.utilisateur.email }}</div>
+                    </div>
+                    <div>
+                        {% if etudiant.filiere %}
+                        <div class="student-filiere">{{ etudiant.filiere.nom }}</div>
+                        {% else %}
+                        <div style="color: #666; font-style: italic;">Aucune</div>
+                        {% endif %}
+                    </div>
+                    <div>
+                        {{ etudiant.utilisateur.date_joined|date:"d/m/Y" }}
+                    </div>
+                    <div class="student-actions">
+                        <a href="{% url 'details' etudiant.id %}" class="btn btn-small btn-view" title="Voir détails">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        <a href="{% url 'assigner_filiere' etudiant.id %}" class="btn btn-small btn-assign" title="Assigner filière">
+                            <i class="fas fa-graduation-cap"></i>
+                        </a>
+                        <a href="{% url 'gerer_bulletins' etudiant.id %}" class="btn btn-small btn-edit" title="Gérer bulletins">
+                            <i class="fas fa-file-alt"></i>
+                        </a>
+                        <a href="{% url 'supprimer_etudiant' etudiant.id %}" class="btn btn-small btn-delete" title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet étudiant ?')">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="fas fa-users"></i>
+                <h3>Aucun étudiant trouvé</h3>
+                <p>
+                    {% if filiere_courante %}
+                        Aucun étudiant n'est inscrit dans la filière {{ filiere_courante.nom }}.
+                    {% else %}
+                        Aucun étudiant n'est sans filière.
+                    {% endif %}
+                </p>
+                <a href="{% url 'admin_etudiants' %}" class="btn btn-primary">
+                    <i class="fas fa-arrow-left"></i> Retour à la liste complète
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

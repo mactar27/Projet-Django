@@ -1,0 +1,385 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des Étudiants - ISEP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .students-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .students-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem;
+            text-align: center;
+            color: white;
+        }
+
+        .students-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .students-header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .students-content {
+            padding: 2rem;
+        }
+
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            border-left: 4px solid #667eea;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+            display: block;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .table-header {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 1.5rem;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .table-header h3 {
+            color: #333;
+            font-size: 1.3rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .students-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .students-table thead th {
+            background: #667eea;
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .students-table tbody tr {
+            transition: all 0.3s ease;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .students-table tbody tr:hover {
+            background: #f8f9fa;
+            transform: scale(1.01);
+        }
+
+        .students-table tbody td {
+            padding: 1rem;
+            vertical-align: middle;
+            color: #555;
+        }
+
+        .student-id {
+            font-weight: 600;
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .student-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .student-info {
+            color: #666;
+        }
+
+        .student-info:empty::before {
+            content: "Non défini";
+            color: #adb5bd;
+            font-style: italic;
+        }
+
+        .details-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .details-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: #dee2e6;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h3 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .back-link {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s ease;
+            z-index: 10;
+        }
+
+        .back-link:hover {
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .students-content {
+                padding: 1rem;
+            }
+
+            .stats-bar {
+                grid-template-columns: 1fr;
+            }
+
+            .students-table {
+                font-size: 0.85rem;
+            }
+
+            .students-table thead th,
+            .students-table tbody td {
+                padding: 0.75rem 0.5rem;
+            }
+
+            .table-header {
+                padding: 1rem;
+            }
+
+            .students-header h1 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .students-table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+
+            .students-table thead th {
+                padding: 0.5rem;
+                font-size: 0.75rem;
+            }
+
+            .students-table tbody td {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="{% url 'home' %}" class="back-link">
+        <i class="fas fa-arrow-left"></i> Retour à l'accueil
+    </a>
+
+    <div class="students-container">
+        <div class="students-header">
+            <h1><i class="fas fa-users"></i> Liste des Étudiants</h1>
+            <p>Gestion et visualisation des étudiants inscrits</p>
+        </div>
+
+        <div class="students-content">
+            <div class="stats-bar">
+                <div class="stat-card">
+                    <span class="stat-number">{{ etudiants|length }}</span>
+                    <span class="stat-label">Étudiants inscrits</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">{{ etudiants|length|add:"0" }}</span>
+                    <span class="stat-label">Profils actifs</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">{% widthratio etudiants|length 1 1 %}</span>
+                    <span class="stat-label">Communauté</span>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <div class="table-header">
+                    <h3><i class="fas fa-table"></i> Détails des étudiants</h3>
+                </div>
+
+                {% if etudiants %}
+                <table class="students-table">
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-hashtag"></i> ID</th>
+                            <th><i class="fas fa-user"></i> Prénom</th>
+                            <th><i class="fas fa-user"></i> Nom</th>
+                            <th><i class="fas fa-phone"></i> Téléphone</th>
+                            <th><i class="fas fa-map-marker-alt"></i> Adresse</th>
+                            <th><i class="fas fa-calendar"></i> Date de naissance</th>
+                            <th><i class="fas fa-cogs"></i> Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for etudiant in etudiants %}
+                        <tr>
+                            <td><span class="student-id">#{{ etudiant.id }}</span></td>
+                            <td>
+                                <div class="student-name">
+                                    {{ etudiant.prenom|default:"Non défini" }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="student-name">
+                                    {{ etudiant.nom|default:"Non défini" }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="student-info">
+                                    {% if etudiant.telephone %}
+                                        {{ etudiant.telephone }}
+                                    {% else %}
+                                        Non défini
+                                    {% endif %}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="student-info">
+                                    {% if etudiant.adresse %}
+                                        {{ etudiant.adresse }}
+                                    {% else %}
+                                        Non défini
+                                    {% endif %}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="student-info">
+                                    {% if etudiant.date %}
+                                        {{ etudiant.date|date:"d/m/Y" }}
+                                    {% else %}
+                                        Non défini
+                                    {% endif %}
+                                </div>
+                            </td>
+                            <td>
+                                <a href="{% url 'details' etudiant.id %}" class="details-btn">
+                                    <i class="fas fa-eye"></i> Voir détails
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-users"></i>
+                    <h3>Aucun étudiant trouvé</h3>
+                    <p>Il n'y a actuellement aucun étudiant inscrit dans le système.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

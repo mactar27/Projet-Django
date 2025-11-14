@@ -1,0 +1,12 @@
+{% extends 'template.html' %}
+
+{% block content %}
+<h1>Tableau de Bord Étudiant</h1>
+<p>Nom: {{ etudiant.prenom }} {{ etudiant.nom }}</p>
+<p>Filière: {{ etudiant.filiere.nom|default:"Non assignée" }}</p>
+<div class="d-flex flex-wrap gap-2">
+    <a href="{% url 'profil_utilisateur' %}" class="btn btn-primary">Mon Profil</a>
+    <a href="{% url 'liste_documents' %}" class="btn btn-secondary">Mes Documents</a>
+    <a href="{% url 'cours' %}" class="btn btn-info">Cours</a>
+</div>
+{% endblock %}

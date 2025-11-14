@@ -1,0 +1,509 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gérer les Bulletins - {{ etudiant.prenom }} {{ etudiant.nom }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .content {
+            padding: 2rem;
+        }
+
+        .student-info {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            border-left: 5px solid #667eea;
+        }
+
+        .student-info h3 {
+            color: #333;
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        .student-info p {
+            color: #666;
+            margin-bottom: 0.3rem;
+        }
+
+        .actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .upload-section {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            border: 2px dashed #667eea;
+        }
+
+        .upload-section h3 {
+            color: #333;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 1.4rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .file-input-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            background: #fff;
+            border: 2px dashed #667eea;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 60px;
+        }
+
+        .file-input-label:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .file-input-label i {
+            margin-right: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .bulletins-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .bulletin-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            border: 1px solid #e9ecef;
+        }
+
+        .bulletin-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .bulletin-icon {
+            font-size: 2.5rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .bulletin-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+            word-break: break-word;
+        }
+
+        .bulletin-info {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .bulletin-type {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            background: #667eea;
+            color: white;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .bulletin-date {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .bulletin-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-small {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+            border-radius: 15px;
+        }
+
+        .btn-view {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-download {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn-delete {
+            background: #dc3545;
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: #ddd;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .empty-state p {
+            margin-bottom: 2rem;
+        }
+
+        .messages {
+            margin-bottom: 1rem;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        @media (max-width: 768px) {
+            .bulletins-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .actions {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-file-alt"></i> Gérer les Bulletins</h1>
+            <p>{{ etudiant.prenom }} {{ etudiant.nom }}</p>
+        </div>
+
+        <div class="content">
+            <div class="student-info">
+                <h3><i class="fas fa-user"></i> Informations de l'étudiant</h3>
+                <p><strong>Nom complet:</strong> {{ etudiant.prenom }} {{ etudiant.nom }}</p>
+                <p><strong>Email:</strong> {{ etudiant.utilisateur.email }}</p>
+                {% if etudiant.filiere %}
+                <p><strong>Filière:</strong> {{ etudiant.filiere.nom }}</p>
+                {% endif %}
+            </div>
+
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="actions">
+                <a href="{% url 'admin_etudiants' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Retour à la liste
+                </a>
+                <a href="{% url 'home' %}" class="btn btn-secondary">
+                    <i class="fas fa-home"></i> Accueil
+                </a>
+            </div>
+
+            <div class="upload-section">
+                <h3><i class="fas fa-plus"></i> Ajouter un nouveau bulletin</h3>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label for="{{ form.titre.id_for_label }}">Titre du document</label>
+                        {{ form.titre }}
+                        {% if form.titre.errors %}
+                        <div class="alert alert-error">
+                            {% for error in form.titre.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.type_document.id_for_label }}">Type de document</label>
+                        {{ form.type_document }}
+                        {% if form.type_document.errors %}
+                        <div class="alert alert-error">
+                            {% for error in form.type_document.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.annee_scolaire.id_for_label }}">Année scolaire (optionnel)</label>
+                        {{ form.annee_scolaire }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.semestre.id_for_label }}">Semestre (optionnel)</label>
+                        {{ form.semestre }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.fichier.id_for_label }}">Sélectionner le fichier</label>
+                        <div class="file-input-wrapper">
+                            <input type="file" name="fichier" id="{{ form.fichier.id_for_label }}" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.txt">
+                            <label for="{{ form.fichier.id_for_label }}" class="file-input-label">
+                                <i class="fas fa-folder-open"></i>
+                                Choisir un fichier (PDF, DOC, JPG, PNG, TXT...)
+                            </label>
+                        </div>
+                        {% if form.fichier.errors %}
+                        <div class="alert alert-error">
+                            {% for error in form.fichier.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-upload"></i> Télécharger le bulletin
+                    </button>
+                </form>
+            </div>
+
+            <h3 style="text-align: center; margin-bottom: 2rem; color: #333;">
+                <i class="fas fa-list"></i> Bulletins existants
+            </h3>
+
+            {% if bulletins %}
+            <div class="bulletins-grid">
+                {% for bulletin in bulletins %}
+                <div class="bulletin-card">
+                    <div class="bulletin-icon">
+                        {% if bulletin.type_document == 'bulletin' %}
+                            <i class="fas fa-file-invoice"></i>
+                        {% elif bulletin.type_document == 'certificat' %}
+                            <i class="fas fa-certificate"></i>
+                        {% elif bulletin.type_document == 'diplome' %}
+                            <i class="fas fa-graduation-cap"></i>
+                        {% else %}
+                            <i class="fas fa-file"></i>
+                        {% endif %}
+                    </div>
+                    <div class="bulletin-title">{{ bulletin.titre }}</div>
+                    <div class="bulletin-type">{{ bulletin.get_type_document_display }}</div>
+                    <div class="bulletin-info">
+                        <div class="bulletin-date">
+                            <i class="fas fa-calendar"></i>
+                            {{ bulletin.date_upload|date:"d/m/Y H:i" }}
+                        </div>
+                        {% if bulletin.annee_scolaire %}
+                        <div style="margin-bottom: 0.5rem;">
+                            <i class="fas fa-calendar-alt"></i> {{ bulletin.annee_scolaire }}
+                        </div>
+                        {% endif %}
+                        {% if bulletin.semestre %}
+                        <div>
+                            <i class="fas fa-clock"></i> {{ bulletin.semestre }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="bulletin-actions">
+                        <a href="{{ bulletin.fichier.url }}" target="_blank" class="btn btn-small btn-view">
+                            <i class="fas fa-eye"></i> Voir
+                        </a>
+                        <a href="{{ bulletin.fichier.url }}" download class="btn btn-small btn-download">
+                            <i class="fas fa-download"></i> Télécharger
+                        </a>
+                        <a href="{% url 'supprimer_bulletin' bulletin.id %}" class="btn btn-small btn-delete" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce bulletin ?')">
+                            <i class="fas fa-trash"></i> Supprimer
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="fas fa-folder-open"></i>
+                <h3>Aucun bulletin trouvé</h3>
+                <p>Cet étudiant n'a pas encore de bulletins téléchargés.</p>
+                <p>Utilisez le formulaire ci-dessus pour ajouter le premier bulletin.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        // Mettre à jour le label du fichier sélectionné
+        document.getElementById('{{ form.fichier.id_for_label }}').addEventListener('change', function(e) {
+            const fileName = e.target.files[0] ? e.target.files[0].name : 'Choisir un fichier (PDF, DOC, JPG, PNG, TXT...)';
+            const label = e.target.nextElementSibling;
+            label.innerHTML = '<i class="fas fa-file"></i> ' + fileName;
+        });
+    </script>
+</body>
+</html>

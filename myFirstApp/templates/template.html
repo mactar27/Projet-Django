@@ -1,0 +1,417 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours et Ressources - ISEP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .courses-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .courses-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem;
+            text-align: center;
+            color: white;
+        }
+
+        .courses-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .courses-header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .courses-content {
+            padding: 2rem;
+        }
+
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        .section-header {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            border-left: 4px solid #667eea;
+        }
+
+        .section-header h2 {
+            color: #333;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-header p {
+            color: #666;
+            margin: 0;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        .table-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .students-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .students-table thead th {
+            background: #f8f9fa;
+            color: #333;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .students-table tbody tr {
+            transition: all 0.3s ease;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .students-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .students-table tbody td {
+            padding: 1rem;
+            vertical-align: middle;
+            color: #555;
+        }
+
+        .student-id {
+            font-weight: 600;
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .student-info {
+            color: #666;
+        }
+
+        .student-info:empty::before {
+            content: "Non défini";
+            color: #adb5bd;
+            font-style: italic;
+        }
+
+        .back-link {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s ease;
+            z-index: 10;
+        }
+
+        .back-link:hover {
+            opacity: 0.8;
+        }
+
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            border-left: 4px solid #667eea;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+            display: block;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .courses-content {
+                padding: 1rem;
+            }
+
+            .students-table {
+                font-size: 0.85rem;
+            }
+
+            .students-table thead th,
+            .students-table tbody td {
+                padding: 0.75rem 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .students-table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="{% url 'home' %}" class="back-link">
+        <i class="fas fa-arrow-left"></i> Retour à l'accueil
+    </a>
+
+    <div class="courses-container">
+        <div class="courses-header">
+            <h1><i class="fas fa-book"></i> Cours et Ressources</h1>
+            <p>Explorez les données et statistiques des étudiants</p>
+        </div>
+
+        <div class="courses-content">
+            <div class="stats-section">
+                <div class="stat-card">
+                    <span class="stat-number">{{ mesdonnees|length }}</span>
+                    <span class="stat-label">Étudiants totaux</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">{{ nomdonnees|length }}</span>
+                    <span class="stat-label">Prénoms commençant par I</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">{{ donneesfiltres|length }}</span>
+                    <span class="stat-label">Étudiants prénommés Ibrahima</span>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h2><i class="fas fa-users"></i> Tous les étudiants</h2>
+                    <p>Liste complète de tous les étudiants inscrits dans le système</p>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-header">
+                        <i class="fas fa-list"></i> Liste complète des étudiants
+                    </div>
+                    <table class="students-table">
+                        <thead>
+                            <tr>
+                                <th><i class="fas fa-hashtag"></i> ID</th>
+                                <th><i class="fas fa-user"></i> Prénom</th>
+                                <th><i class="fas fa-user"></i> Nom</th>
+                                <th><i class="fas fa-phone"></i> Téléphone</th>
+                                <th><i class="fas fa-map-marker-alt"></i> Adresse</th>
+                                <th><i class="fas fa-calendar"></i> Date de naissance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for etudiant in mesdonnees %}
+                            <tr>
+                                <td><span class="student-id">#{{ etudiant.id }}</span></td>
+                                <td>{{ etudiant.prenom|default:"Non défini" }}</td>
+                                <td>{{ etudiant.nom|default:"Non défini" }}</td>
+                                <td>
+                                    <span class="student-info">
+                                        {% if etudiant.telephone %}
+                                            {{ etudiant.telephone }}
+                                        {% else %}
+                                            Non défini
+                                        {% endif %}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="student-info">
+                                        {% if etudiant.adresse %}
+                                            {{ etudiant.adresse }}
+                                        {% else %}
+                                            Non défini
+                                        {% endif %}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="student-info">
+                                        {% if etudiant.date %}
+                                            {{ etudiant.date|date:"d/m/Y" }}
+                                        {% else %}
+                                            Non défini
+                                        {% endif %}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h2><i class="fas fa-filter"></i> Étudiants filtrés</h2>
+                    <p>Étudiants dont le prénom commence par la lettre "I"</p>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-header">
+                        <i class="fas fa-search"></i> Résultats du filtre (Prénoms commençant par "I")
+                    </div>
+                    <table class="students-table">
+                        <thead>
+                            <tr>
+                                <th><i class="fas fa-hashtag"></i> ID</th>
+                                <th><i class="fas fa-user"></i> Prénom</th>
+                                <th><i class="fas fa-user"></i> Nom</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for etudiant in nomdonnees %}
+                            <tr>
+                                <td><span class="student-id">#{{ etudiant.id }}</span></td>
+                                <td>{{ etudiant.prenom|default:"Non défini" }}</td>
+                                <td>{{ etudiant.nom|default:"Non défini" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" style="text-align: center; color: #666; padding: 2rem;">
+                                    <i class="fas fa-search" style="font-size: 2rem; color: #dee2e6; margin-bottom: 1rem;"></i>
+                                    <br>Aucun étudiant trouvé avec ce filtre
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h2><i class="fas fa-sort-alpha-down"></i> Étudiants triés</h2>
+                    <p>Liste des étudiants triée par ordre alphabétique (nom)</p>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-header">
+                        <i class="fas fa-sort"></i> Tri alphabétique par nom
+                    </div>
+                    <table class="students-table">
+                        <thead>
+                            <tr>
+                                <th><i class="fas fa-hashtag"></i> ID</th>
+                                <th><i class="fas fa-user"></i> Prénom</th>
+                                <th><i class="fas fa-user"></i> Nom</th>
+                                <th><i class="fas fa-phone"></i> Téléphone</th>
+                                <th><i class="fas fa-map-marker-alt"></i> Adresse</th>
+                                <th><i class="fas fa-calendar"></i> Date de naissance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for etudiant in ordonnees %}
+                            <tr>
+                                <td><span class="student-id">#{{ etudiant.id }}</span></td>
+                                <td>{{ etudiant.prenom|default:"Non défini" }}</td>
+                                <td>{{ etudiant.nom|default:"Non défini" }}</td>
+                                <td>
+                                    <span class="student-info">
+                                        {% if etudiant.telephone %}
+                                            {{ etudiant.telephone }}
+                                        {% else %}
+                                            Non défini
+                                        {% endif %}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="student-info">
+                                        {% if etudiant.adresse %}
+                                            {{ etudiant.adresse }}
+                                        {% else %}
+                                            Non défini
+                                        {% endif %}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="student-info">
+                                        {% if etudiant.date %}
+                                            {{ etudiant.date|date:"d/m/Y" }}
+                                        {% else %}
+                                            Non défini
+                                        {% endif %}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
